@@ -105,20 +105,30 @@ const BuyerRegister = (props) => {
           value={password}
           onChange={onChangePassword}
         />
-      <Grid item xs={12}>
+      <Grid item xs={3}>
         <TextField
           label="Age"
           variant="outlined"
           value={age}
           onChange={onChangeAge}
         />
-      <Grid item xs={12}>
-        <TextField
-          label="Batch"
-          variant="outlined"
-          value={batch}
-          onChange={onChangeBatch}
-        />
+      <Grid item>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Batch</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={batch}
+            label="Type"
+            onChange={onChangeBatch}
+          >
+            <MenuItem value={"UG1"}>UG1</MenuItem>
+            <MenuItem value={"UG2"}>UG2</MenuItem>
+            <MenuItem value={"UG2"}>UG3</MenuItem>
+            <MenuItem value={"UG2"}>UG4</MenuItem>
+            <MenuItem value={"UG2"}>UG5</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
       </Grid>
       </Grid>

@@ -59,23 +59,5 @@ router.post("/register", (req, res) => {
 });
 
 // POST request 
-// Login
-router.post("/login", (req, res) => {
-	const email = req.body.email;
-	// Find user by email
-	Buyer.findOne({ email }).then(user => {
-		// Check if user email exists
-		if (!user) {
-			return res.status(404).json({
-				error: "Email not found",
-			});
-        }
-        else{
-            res.send("Email Found");
-            return user;
-        }
-	});
-});
-
 module.exports = router;
 

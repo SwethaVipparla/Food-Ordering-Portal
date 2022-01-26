@@ -9,6 +9,7 @@ const DB_NAME = "tutorial"
 // routes
 var vendor = require("./routes/vendor");
 var buyer = require("./routes/buyer");
+var user = require("./routes/user");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -24,6 +25,7 @@ connection.once('open', function() {
 // setup API endpoints
 app.use("/vendor", vendor);
 app.use("/buyer", buyer);
+app.use("/user", user);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

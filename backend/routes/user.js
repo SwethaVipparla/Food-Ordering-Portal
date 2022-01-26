@@ -12,29 +12,28 @@ router.post("/login", (req, res) => {
                 });
             }
 
-            const email = req.body.email;
-            const pass = req.body.password
+            const email = req.body.email; 
             // Find user by email
             Buyer.findOne({
                 email
-            }).then(usera => {
+            }).then(buyer => {
                     // Check if user email exists
-                    if (!usera) {
+                    if (!buyer) {
                         Vendor.findOne({
                             email
-                        }).then(userr => {
+                        }).then(vendor => {
                                 // Check if user email exists
-                                if (!userr) {
+                                if (!vendor) {
                                     return res.status(404).json({
                                         error: "Email not found",
                                     });
                                 } else {
                                     // Check password
-                                    if (pass === userr.password) {
-                                        return res.status(200).json(userr);
+                                    if (req.body.password === vendor.password) {
+                                        return res.status(200).json(vendor);
                                     } else {
                                         return res.status(404).json({
-                                            error: "Incorrect Password",
+                                            error: "Incorrect password",
                                         });
                                     }
                                 }
@@ -42,11 +41,11 @@ router.post("/login", (req, res) => {
                     }
                         else {
                             // Check password
-                            if (pass === usera.password) {
-                                return res.status(200).json(usera);
+                            if (req.body.password === buyer.password) {
+                                return res.status(200).json(buyer);
                             } else {
                                 return res.status(404).json({
-                                    error: "Incorrect Password",
+                                    error: req.body.password,
                                 });
                             }
                         }
@@ -54,3 +53,6 @@ router.post("/login", (req, res) => {
                     });
                 
             });
+
+
+            module.exports = router;
