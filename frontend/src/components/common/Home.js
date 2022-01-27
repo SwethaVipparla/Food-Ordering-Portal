@@ -1,70 +1,58 @@
-import React, { useState } from "react";
-import axios from "axios";
+import React from "react";
 import Grid from "@mui/material/Grid";
-import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
 const Login = (props) => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const onChangeEmail = (event) => {
-    setEmail(event.target.value);
+  const onSubmitRegister = (event) => {
+    navigate("/register");
   };
 
-  const onChangePassword = (event) => {
-    setPassword(event.target.value);
+  const onSubmitLogin = (event) => {
+    navigate("/login");
   };
 
-  const resetInputs = () => {
-    setEmail("");
-    setPassword("");
-  };
-
-  const onSubmit = (event) => {
-    event.preventDefault();
-
-    const User = {
-      email: email,
-      password: password,
-    };
-
-    axios
-      .post("http://localhost:4000/user/login", User)
-      .then((response) => {
-        console.log(response.data);
-        localStorage.setItem('email', User.email);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
-    resetInputs();
-  };
 
   return (
-    <Grid container align={"center"} spacing={2}>
-      <Grid item xs={12}>
-        <TextField
-          label="Email"
-          variant="outlined"
-          value={email}
-          onChange={onChangeEmail}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <TextField
-          label="Password"
-          variant="outlined"
-          value={password}
-          onChange={onChangePassword}
-        />
-      </Grid>
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={onSubmit}>
-          Login
+    <Grid  container
+        spacing={3}
+        direction="column"
+        alignItems="center"
+        justifyContent="center"
+        style={{ minHeight: '80vh' }}>
+
+      <Grid item xs={12} 
+          style={{ textAlign:'center' }}>
+
+        <Button variant="contained" onClick={onSubmitRegister} sx={{
+          boxShadow: 1,
+          borderRadius: 2,
+          p: 2,
+          minWidth: 150,
+          alignItems: 'center',
+        }}>
+          Register
         </Button>
+
       </Grid>
+
+      <Grid item xs={12} 
+          style={{ textAlign:'center' }}>
+
+        <Button variant="contained" onClick={onSubmitLogin} sx={{
+          boxShadow: 1,
+          borderRadius: 2,
+          p: 2,
+          minWidth: 150,
+          alignItems: 'center',
+        }}>
+          Log In
+        </Button>
+
+        </Grid>
+        
     </Grid>
   );
 };

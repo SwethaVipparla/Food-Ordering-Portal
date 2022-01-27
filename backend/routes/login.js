@@ -5,7 +5,7 @@ var router = express.Router();
 const Buyer = require("../models/buyer.model");
 const Vendor = require("../models/vendor.model");
 
-router.post("/login", (req, res) => {
+router.post("/", (req, res) => {
             if (!req.body.email) {
                 return res.status(404).json({
                     error: "Invalid input",
@@ -17,18 +17,15 @@ router.post("/login", (req, res) => {
             Buyer.findOne({
                 email
             }).then(buyer => {
-                    // Check if user email exists
                     if (!buyer) {
                         Vendor.findOne({
                             email
                         }).then(vendor => {
-                                // Check if user email exists
                                 if (!vendor) {
                                     return res.status(404).json({
                                         error: "Email not found",
                                     });
                                 } else {
-                                    // Check password
                                     if (req.body.password === vendor.password) {
                                         return res.status(200).json(vendor);
                                     } else {
@@ -40,7 +37,6 @@ router.post("/login", (req, res) => {
                             })
                     }
                         else {
-                            // Check password
                             if (req.body.password === buyer.password) {
                                 return res.status(200).json(buyer);
                             } else {

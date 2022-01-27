@@ -4,12 +4,12 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
-const DB_NAME = "tutorial"
+const DB_NAME = "foodapp"
 
 // routes
 var vendor = require("./routes/vendor");
 var buyer = require("./routes/buyer");
-var user = require("./routes/user");
+var login = require("./routes/login");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -25,7 +25,7 @@ connection.once('open', function() {
 // setup API endpoints
 app.use("/vendor", vendor);
 app.use("/buyer", buyer);
-app.use("/user", user);
+app.use("/login", login);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

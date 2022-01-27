@@ -37,3 +37,40 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+// const Navbar = (props) => {
+//   const navigate = useNavigate();
+
+//   return (
+//     <Box sx={{ flexGrow: 1 }}>
+//       <AppBar position="static">
+//         <Toolbar>
+//           <Typography
+//             variant="h6"
+//             component="div"
+//             sx={{ cursor: "pointer" }}
+//             onClick={() => navigate("/")}
+//           >
+//             Canteen Portal
+//           </Typography>
+//           {
+//             console.log(props.isLoggedIn) &&
+//             props.isLoggedIn? (
+//               <Button color="inherit" onClick={() => navigate("/profile")}>
+//                 Profile
+//               </Button>
+//             ) : (
+//               <Button color="inherit" onClick={() => navigate("/register")}>
+//                 Register
+//               </Button>
+//             )
+//           }
+//           <Box sx={{ flexGrow: 1 }} />
+//           <Button color="inherit" onClick={() => navigate("/users")}>
+//             Users
+//           </Button>
+//         </Toolbar>
+//       </AppBar>
+//     </Box>
+//   );
+// };

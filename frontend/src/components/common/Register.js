@@ -7,8 +7,18 @@ import { FormControl } from "@mui/material";
 import { InputLabel } from "@mui/material";
 import { Select } from "@mui/material";
 import { MenuItem } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+
+const formControl = {
+    margin: "10px",
+    width: "15%",
+    display: "flex",
+    wrap: "nowrap"
+  };
+
 
 const BuyerRegister = (props) => {
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [number, setNumber] = useState("");
@@ -59,24 +69,27 @@ const BuyerRegister = (props) => {
       password: password,
       age: age,
       batch: batch,
-      date: Date.now(),
+      type: "buyer",
     };
 
     axios
       .post("http://localhost:4000/buyer/register", newUser)
       .then((response) => {
-        alert("Created\t" + response.data.name);
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
     resetInputs();
+    navigate("/");
   };
 
   return (
     <Grid container align={"center"} spacing={2}>
       <Grid item xs={12}>
         <TextField
-          label="Name"
+          label="Name*"
           variant="outlined"
           value={name}
           onChange={onChangeUsername}
@@ -84,7 +97,7 @@ const BuyerRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Email"
+          label="Email*"
           variant="outlined"
           value={email}
           onChange={onChangeEmail}
@@ -92,7 +105,7 @@ const BuyerRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Number"
+          label="Number*"
           variant="outlined"
           value={number}
           onChange={onChangeNumber}
@@ -100,20 +113,23 @@ const BuyerRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Password"
+          label="Password*"
           variant="outlined"
           value={password}
+          type={'password'}
           onChange={onChangePassword}
         />
-      <Grid item xs={3}>
+      </Grid>
+      <Grid item xs={12}>
         <TextField
-          label="Age"
+          label="Age*"
           variant="outlined"
           value={age}
           onChange={onChangeAge}
         />
-      <Grid item>
-        <FormControl fullWidth>
+      </Grid>
+      <Grid item xs={12}>
+        <FormControl style={formControl}>
           <InputLabel id="demo-simple-select-label">Batch</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -124,24 +140,32 @@ const BuyerRegister = (props) => {
           >
             <MenuItem value={"UG1"}>UG1</MenuItem>
             <MenuItem value={"UG2"}>UG2</MenuItem>
-            <MenuItem value={"UG2"}>UG3</MenuItem>
-            <MenuItem value={"UG2"}>UG4</MenuItem>
-            <MenuItem value={"UG2"}>UG5</MenuItem>
+            <MenuItem value={"UG3"}>UG3</MenuItem>
+            <MenuItem value={"UG4"}>UG4</MenuItem>
+            <MenuItem value={"UG5"}>UG5</MenuItem>
           </Select>
         </FormControl>
       </Grid>
-      </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={onSubmit}>
+      <Grid item xs={12} 
+          style={{ textAlign:'center' }}>
+
+        <Button variant="contained" onClick={onSubmit} sx={{
+          boxShadow: 1,
+          borderRadius: 2,
+          p: 2,
+          minWidth: 150,
+          alignItems: 'center',
+        }}>
           Register
         </Button>
+
       </Grid>
     </Grid>
   );
 };
 
 const VendorRegister = (props) => {
+  const navigate = useNavigate();
   const [manager_name, setManagerName] = useState("");
   const [shop_name, setShopName] = useState("");
   const [email, setEmail] = useState("");
@@ -200,23 +224,27 @@ const VendorRegister = (props) => {
       password: password,
       opening_time: opening_time,
       closing_time: closing_time,
+      type: "vendor"
     };
 
     axios
       .post("http://localhost:4000/vendor/register", newUser)
       .then((response) => {
-        alert("Created\t" + response.data.name);
         console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
 
     resetInputs();
+    navigate("/");
   };
 
   return (
     <Grid container align={"center"} spacing={2}>
       <Grid item xs={12}>
         <TextField
-          label="Shop Name"
+          label="Shop Name*"
           variant="outlined"
           value={shop_name}
           onChange={onChangeShopName}
@@ -225,7 +253,7 @@ const VendorRegister = (props) => {
 
       <Grid item xs={12}>
         <TextField
-          label="Manager Name"
+          label="Manager Name*"
           variant="outlined"
           value={manager_name}
           onChange={onChangeUsername}
@@ -233,7 +261,7 @@ const VendorRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Email"
+          label="Email*"
           variant="outlined"
           value={email}
           onChange={onChangeEmail}
@@ -241,7 +269,7 @@ const VendorRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Number"
+          label="Number*"
           variant="outlined"
           value={number}
           onChange={onChangeNumber}
@@ -249,32 +277,42 @@ const VendorRegister = (props) => {
       </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Password"
+          label="Password*"
           variant="outlined"
           value={password}
+          type={'password'}
           onChange={onChangePassword}
         />
+        </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Opening Time"
+          label="Opening Time*"
           variant="outlined"
           value={opening_time}
           onChange={onChangeOpeningTime}
         />
+      </Grid>
       <Grid item xs={12}>
         <TextField
-          label="Closing Time"
+          label="Closing Time*"
           variant="outlined"
           value={closing_time}
           onChange={onChangeClosingTime}
         />
       </Grid>
-      </Grid>
-      </Grid>
-      <Grid item xs={12}>
-        <Button variant="contained" onClick={onSubmit}>
+      <Grid item xs={12} 
+          style={{ textAlign:'center' }}>
+
+        <Button variant="contained" onClick={onSubmit} sx={{
+          boxShadow: 1,
+          borderRadius: 2,
+          p: 2,
+          minWidth: 150,
+          alignItems: 'center',
+        }}>
           Register
         </Button>
+
       </Grid>
     </Grid>
   );
@@ -288,9 +326,10 @@ const Register = () => {
   };
   return (
     <div>
-    <div>
-      <FormControl fullWidth>
-        <InputLabel id="demo-simple-select-label">Select Type of User</InputLabel>
+    <Grid container align={"center"} spacing={3}>
+    <Grid item xs={12}>
+      <FormControl style={formControl}>
+        <InputLabel id="demo-simple-select-label">Type</InputLabel>
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
@@ -302,12 +341,11 @@ const Register = () => {
           <MenuItem value={"Buyer"}>Buyer</MenuItem>
         </Select>
       </FormControl>
-      </div>
-      <div>
       {
         value === "Vendor" ? <VendorRegister /> : value === "Buyer" ? <BuyerRegister /> : null
       }
-      </div>
+      </Grid>
+    </Grid>
     </div>
   )};
   

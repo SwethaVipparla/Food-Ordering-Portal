@@ -28,7 +28,8 @@ router.post("/register", (req, res) => {
         number: req.body.number,
         password: req.body.password,
         opening_time: req.body.opening_time,
-        closing_time: req.body.closing_time
+        closing_time: req.body.closing_time,
+        type: req.body.type
     });
 
     newUser.save()
@@ -39,6 +40,53 @@ router.post("/register", (req, res) => {
             res.status(400).send(err);
         });
 });
+
+router.get("/vendor", function (req, res) {
+    Vendor.find(function (err, users) {
+        if (err) {
+            console.log(err);
+        } else {
+            res.json(users);
+        }
+    });
+});
+
+router.put("/editVendor", (req, res) => {
+    Vendor.findOneAndUpdate({ email: req.body.email }, {
+        manager_name: req.body.manager_name,
+        number: req.body.number,
+        shop_name: req.body.shop_name,
+        password: req.body.password,
+        opening_time: req.body.opening_time,
+        closing_time: req.body.closing_time
+    }, { new: true, useFindAndModify: false }, function (err, val) {
+        console.log(err)
+        if (err) {
+            return res.status(404).json({
+                error: "Not found",
+            });
+        }
+        else {
+            res.status(200).json(val);
+        }
+    });
+});
+
+router.post("/getVendor", async (req, res) => {
+    const email = req.body.email
+    console.log(email)
+    Vendor.findOne({ email }).then(vendor => {
+        if (!vendor) {
+            return res.status(404).json({
+                error: "vendor not Found",
+            });
+        } else {
+            res.status(200).json(vendor);
+        }
+
+    })
+});
+
 
 // POST request 
 // Login

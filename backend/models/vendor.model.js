@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 // Create Schema
 const VendorSchema = new Schema({
+	type: {
+		type: String,
+		required: true
+	},
 	manager_name: {
 		type: String,
 		required: true

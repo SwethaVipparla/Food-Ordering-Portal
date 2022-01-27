@@ -6,11 +6,14 @@ import Home from "./components/common/Home";
 import Register from "./components/common/Register";
 import Navbar from "./components/templates/Navbar";
 import Profile from "./components/users/Profile";
+import Login from "./components/common/Login";
+
+const isLoggedIn = window.localStorage.getItem("email") ? true : false;
 
 const Layout = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar isLoggedIn={isLoggedIn}/>
       <div className="container">
         <Outlet />
       </div>
@@ -27,6 +30,7 @@ function App() {
           <Route path="users" element={<UsersList />} />
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="login" element={<Login />} />
         </Route>
       </Routes>
     </BrowserRouter>
