@@ -3,6 +3,8 @@ var router = express.Router();
 
 // Load Buyer model
 const Buyer = require("../models/buyer.model");
+const Vendor = require("../models/vendor.model");
+
 
 // GET request 
 // Getting all the users
@@ -16,18 +18,7 @@ router.get("/", function(req, res) {
 	})
 });
 
-router.get("/buyer", function (req, res) {
-    Buyer.find(function (err, users) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(users);
-        }
-    });
-});
-
 router.get("/getBuyer", async (req, res) => {
-    console.log(req.headers.email)
     buyer = Buyer.findOne({ email: req.body.email });
     if (!buyer) {
         return res.status(404).json({
@@ -96,7 +87,7 @@ router.put("/editBuyer", (req, res) => {
             });
         }
         else {
-            return res.statusjson(val)
+            return res.status(200).json(val)
         }
     });
 });

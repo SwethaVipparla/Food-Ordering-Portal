@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import Fuse from "fuse.js";
 import axios from "axios";
 import Paper from "@mui/material/Paper";
 import Grid from "@mui/material/Grid";
@@ -9,35 +10,40 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
+import { FormControl, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
 import Autocomplete from "@mui/material/Autocomplete";
 import IconButton from "@mui/material/IconButton";
 import InputAdornment from "@mui/material/InputAdornment";
-
 import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
 const UsersList = (props) => {
-  const [users, setUsers] = useState([]);
+  const [users, setFoodItems] = useState([]);
+  const [selUsers, setSelUsers] = useState([]);
   const [sortedUsers, setSortedUsers] = useState([]);
   const [sortName, setSortName] = useState(true);
   const [searchText, setSearchText] = useState("");
+  const [preference, setPreference] = useState("");
 
   useEffect(() => {
     axios
-      .get("http://localhost:4000/user")
+      .get("http://localhost:4000/foodItem")
       .then((response) => {
-        setUsers(response.data);
+        setFoodItems(response.data);
         setSortedUsers(response.data);
         setSearchText("");
+        setSelUsers(response.data);
       })
       .catch((error) => {
         console.log(error);
       });
   }, []);
+
+  console.log(users)
 
   const sortChange = () => {
     let usersTemp = users;
@@ -49,14 +55,49 @@ const UsersList = (props) => {
         return 1;
       }
     });
-    setUsers(usersTemp);
+    setFoodItems(usersTemp);
     setSortName(!sortName);
   };
 
-  const customFunction = (event) => {
-    console.log(event.target.value);
+  const onChangeSearchText = (event) => {
     setSearchText(event.target.value);
   };
+
+  const onChangePreference = (event) => {
+    setPreference(event.target.value);
+  };
+
+  const addPreference = (event) => {
+    axios
+      .post("http://localhost:4000/foodItem/preference", { preference: preference })
+      .then((response) => {
+        setFoodItems(response.data);
+        setSortedUsers(response.data);
+      
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  const fuse = new Fuse(users, {
+    keys: ["name"],
+    includeScore: true,
+  });
+
+  useEffect(() => {
+    let temp = [];
+    if(searchText != "")
+    {
+      temp = fuse.search(searchText).map((item) => item.item);
+    }
+    else
+    {
+      temp = [].concat(users);
+    }
+    console.log(temp);
+    setSelUsers(temp);
+  }, [searchText]);
 
   return (
     <div>
@@ -83,7 +124,7 @@ const UsersList = (props) => {
                   </InputAdornment>
                 ),
               }}
-              // onChange={customFunction}
+              onChange={onChangeSearchText}
             />
           </List>
         </Grid>
@@ -94,22 +135,25 @@ const UsersList = (props) => {
             <ListItem>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  Salary
+                  Food Preference
                 </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="standard-basic"
-                    label="Enter Min"
-                    fullWidth={true}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    id="standard-basic"
-                    label="Enter Max"
-                    fullWidth={true}
-                  />
-                </Grid>
+                <FormGroup
+                  label="Preference"
+                  value={preference}
+                  onChange={onChangePreference}
+                > 
+                  <FormControlLabel control={<Checkbox />} label="Veg" />
+                  <FormControlLabel control={<Checkbox />} label="Non-Veg" />
+                </FormGroup>
+              </Grid>
+              <Grid item xs={12}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={addPreference}
+                >
+                  Apply
+                </Button>
               </Grid>
             </ListItem>
             <Divider />
@@ -141,19 +185,25 @@ const UsersList = (props) => {
                     <Button onClick={sortChange}>
                       {sortName ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
                     </Button>
-                    Date
+                    Name
                   </TableCell>
-                  <TableCell>Name</TableCell>
-                  <TableCell>Email</TableCell>
+                  <TableCell>Price</TableCell>
+                  <TableCell>Rating</TableCell>
+                  <TableCell>Preference</TableCell>
+                  <TableCell>Addons</TableCell>
+                  <TableCell>Tags</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {users.map((user, ind) => (
+                {selUsers.map((user, ind) => (
                   <TableRow key={ind}>
-                    <TableCell>{ind}</TableCell>
-                    <TableCell>{user.date}</TableCell>
+                    <TableCell>{ind + 1}</TableCell>
                     <TableCell>{user.name}</TableCell>
-                    <TableCell>{user.email}</TableCell>
+                    <TableCell>{user.price}</TableCell>
+                    <TableCell>{user.rating}</TableCell>
+                    <TableCell>{user.preference}</TableCell>
+                    <TableCell>{user.addon}</TableCell>
+                    <TableCell>{user.tags}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

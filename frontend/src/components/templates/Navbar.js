@@ -22,9 +22,9 @@ const Navbar = () => {
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
           <Button color="inherit" onClick={() => navigate("/users")}>
-            Users
+            Dashboard
           </Button>
-          <Button color="inherit" onClick={() => navigate("/register")}>
+          <Button color="inherit" onClick={() => navigate("/dashboard")}>
             Register
           </Button>
           <Button color="inherit" onClick={() => navigate("/profile")}>

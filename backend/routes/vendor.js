@@ -2,12 +2,12 @@ var express = require("express");
 var router = express.Router();
 
 // Load User model
-const User = require("../models/vendor.model");
+const Vendor = require("../models/vendor.model");
 
 // GET request 
 // Getting all the users
 router.get("/", function(req, res) {
-    User.find(function(err, users) {
+    Vendor.find(function(err, users) {
 		if (err) {
 			console.log(err);
 		} else {
@@ -21,7 +21,7 @@ router.get("/", function(req, res) {
 // POST request 
 // Add a user to db
 router.post("/register", (req, res) => {
-    const newUser = new User({
+    const newUser = new Vendor({
         manager_name: req.body.manager_name,
         shop_name: req.body.shop_name,
         email: req.body.email,
@@ -39,16 +39,6 @@ router.post("/register", (req, res) => {
         .catch(err => {
             res.status(400).send(err);
         });
-});
-
-router.get("/vendor", function (req, res) {
-    Vendor.find(function (err, users) {
-        if (err) {
-            console.log(err);
-        } else {
-            res.json(users);
-        }
-    });
 });
 
 router.put("/editVendor", (req, res) => {

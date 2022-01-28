@@ -30,6 +30,7 @@ function App() {
           <Route path="users" element={<UsersList />} />
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="dashboard" element={<Profile />} />
           <Route path="login" element={<Login />} />
         </Route>
       </Routes>

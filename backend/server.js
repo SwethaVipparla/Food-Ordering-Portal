@@ -10,6 +10,7 @@ const DB_NAME = "foodapp"
 var vendor = require("./routes/vendor");
 var buyer = require("./routes/buyer");
 var login = require("./routes/login");
+var foodItem = require("./routes/foodItem");
 
 app.use(cors());
 app.use(bodyParser.json());
@@ -26,6 +27,7 @@ connection.once('open', function() {
 app.use("/vendor", vendor);
 app.use("/buyer", buyer);
 app.use("/login", login);
+app.use("/foodItem", foodItem);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);
