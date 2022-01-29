@@ -16,20 +16,6 @@ router.get("/", function (req, res) {
     })
 });
 
-router.get("/getBuyer", async (req, res) => {
-    item = FoodItem.findOne({
-        email: req.body.email
-    });
-    if (!item) {
-        return res.status(404).json({
-            error: "buyer not Found",
-        });
-    } else {
-        res.json(item);
-    }
-});
-
-
 router.post("/search", function (req, res) {
     FoodItem.fuzzySearch({
         name: req.body.name
@@ -44,19 +30,6 @@ router.post("/search", function (req, res) {
     });
 });
 
-router.post("/preference", function (req, res) {
-    item = FoodItem.findOne({
-        preference: req.body.preference
-    });
-    if (!item) {
-        return res.status(404).json({
-            error: "item not Found",
-        });
-    } else {
-        res.json(item);
-    }
-});
-
 // NOTE: Below functions are just sample to show you API endpoints working, for the assignment you may need to edit them
 
 // POST request 
@@ -68,6 +41,7 @@ router.post("/addItem", (req, res) => {
         rating: req.body.rating,
         preference: req.body.preference,
         addon: req.body.addon,
+        vendor: req.body.vendor,
         tags: req.body.tags
     });
 

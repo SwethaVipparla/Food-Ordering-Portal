@@ -1,6 +1,5 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const mongoose_fuzzy_searching = require('mongoose-fuzzy-searching-v2');
 
 // Create Schema
 const FoodItemSchema = new Schema({
@@ -20,9 +19,8 @@ const FoodItemSchema = new Schema({
 		max: 5
 	},
     preference: {
-        type: String,
+        type: Array,
         required: true,
-		enum: ["veg", "non-veg"]
     },
     addon: {
         type: Array,
@@ -33,8 +31,11 @@ const FoodItemSchema = new Schema({
 		type: Array,
 		required: false,
 		default: []
+	},
+	vendor: {
+		type: String,
+		required: true
 	}
 });
 
-FoodItemSchema.plugin(mongoose_fuzzy_searching, { fields: ['name']});
 module.exports = FoodItem = mongoose.model("FoodItem", FoodItemSchema);

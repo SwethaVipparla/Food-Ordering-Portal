@@ -21,14 +21,15 @@ import SearchIcon from "@mui/icons-material/Search";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 
-const UsersList = (props) => {
+const Dashboard = (props) => {
   const [users, setFoodItems] = useState([]);
   const [selUsers, setSelUsers] = useState([]);
   const [sortedUsers, setSortedUsers] = useState([]);
   const [sortName, setSortName] = useState(true);
   const [searchText, setSearchText] = useState("");
-  const [preference, setPreference] = useState("");
-
+  //const [preference, setPreference] = useState([]);
+  const [WantVeg, setVEG] = useState(true);
+  const [WantNVeg, setNVEG] = useState(true);
   useEffect(() => {
     axios
       .get("http://localhost:4000/foodItem")
@@ -41,9 +42,8 @@ const UsersList = (props) => {
       .catch((error) => {
         console.log(error);
       });
+      console.log("hey")
   }, []);
-
-  console.log(users)
 
   const sortChange = () => {
     let usersTemp = users;
@@ -63,22 +63,47 @@ const UsersList = (props) => {
     setSearchText(event.target.value);
   };
 
-  const onChangePreference = (event) => {
-    setPreference(event.target.value);
+  // const onChangePreference = (event) => {
+  //   if(event.target.value == "veg"){
+  //     preference[0] = 'veg';
+  //   }
+  //   else
+  //     preference = 'non-veg';
+      
+  // };
+
+
+  const onVeg = (val) => {
+    setVEG(val);
   };
 
-  const addPreference = (event) => {
-    axios
-      .post("http://localhost:4000/foodItem/preference", { preference: preference })
-      .then((response) => {
-        setFoodItems(response.data);
-        setSortedUsers(response.data);
+  const onNVeg = (val) => {
+    setNVEG(val);
+  }; 
+
+
+  //  const onChangePreference = (event) => {
+  //   if(event.target.value == "veg"){
+  //     preference[0] = 'veg';
+  //   }
+  //   else
+  //     preference = 'non-veg';
       
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // };
+  // const addPreference = (event) => {
+  //   console.log(preference)
+  //   axios
+  //     .post("http://localhost:4000/foodItem/preference", { preference: preference })
+  //     .then((response) => {
+  //       setFoodItems(response.data);
+  //       setSelUsers(response.data);
+  //       setSortedUsers(response.data);
+  //       console.log(response.data)
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   const fuse = new Fuse(users, {
     keys: ["name"],
@@ -87,7 +112,7 @@ const UsersList = (props) => {
 
   useEffect(() => {
     let temp = [];
-    if(searchText != "")
+    if(searchText !== "")
     {
       temp = fuse.search(searchText).map((item) => item.item);
     }
@@ -95,9 +120,14 @@ const UsersList = (props) => {
     {
       temp = [].concat(users);
     }
-    console.log(temp);
+    console.log(temp)
+
+    temp = temp.filter((item) => ((WantVeg && item.preference === 'veg') || (WantNVeg && item.preference === 'non-veg')));
     setSelUsers(temp);
-  }, [searchText]);
+    console.log(temp)
+    console.log(WantNVeg);
+    console.log(WantVeg)
+  }, [searchText, WantVeg, WantNVeg]);
 
   return (
     <div>
@@ -137,24 +167,21 @@ const UsersList = (props) => {
                 <Grid item xs={12}>
                   Food Preference
                 </Grid>
-                <FormGroup
-                  label="Preference"
-                  value={preference}
-                  onChange={onChangePreference}
-                > 
-                  <FormControlLabel control={<Checkbox />} label="Veg" />
-                  <FormControlLabel control={<Checkbox />} label="Non-Veg" />
-                </FormGroup>
+                
+             
+                 <Checkbox  label="veg" checked={WantVeg} onChange={() => onVeg(!WantVeg)}/>
+                <Checkbox  label="non-veg" checked={WantNVeg} onChange={() => onNVeg(!WantNVeg)}/>
+
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Button
                   variant="contained"
                   color="primary"
                   onClick={addPreference}
                 >
                   Apply
-                </Button>
-              </Grid>
+                </Button> */}
+              {/* </Grid> */}
             </ListItem>
             <Divider />
             <ListItem divider>
@@ -215,4 +242,4 @@ const UsersList = (props) => {
   );
 };
 
-export default UsersList;
+export default Dashboard;
