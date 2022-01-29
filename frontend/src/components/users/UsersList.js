@@ -10,7 +10,7 @@ import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
-import { FormControl, FormGroup, FormControlLabel, Checkbox } from "@mui/material";
+import { FormControl, FormGroup, FormControlLabel, Checkbox, InputLabel, Select, MenuItem, OutlinedInput } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import Divider from "@mui/material/Divider";
@@ -25,11 +25,17 @@ const Dashboard = (props) => {
   const [users, setFoodItems] = useState([]);
   const [selUsers, setSelUsers] = useState([]);
   const [sortedUsers, setSortedUsers] = useState([]);
+  const [vendorName, setVendorName] = useState([]);
   const [sortName, setSortName] = useState(true);
   const [searchText, setSearchText] = useState("");
   //const [preference, setPreference] = useState([]);
   const [WantVeg, setVEG] = useState(true);
   const [WantNVeg, setNVEG] = useState(true);
+  const [wallet, setWallet] = useState(0);
+  const [addWallet, setAddWallet] = useState(0);
+  const [selVendors, setVendors] = useState([]);
+  const [selTags, setTags] = useState([]);
+
   useEffect(() => {
     axios
       .get("http://localhost:4000/foodItem")
@@ -43,9 +49,44 @@ const Dashboard = (props) => {
         console.log(error);
       });
       console.log("hey")
+
+      axios
+      .get("http://localhost:4000/vendor")
+      .then((response) => {
+        setVendorName(response.data);
+        console.log(vendorName);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+
+        axios
+        .post("http://localhost:4000/fooditem/getWallet", {
+          email: localStorage.getItem("email"),
+        })
+        .then((response) => {
+          setWallet(response.data.amount);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
   }, []);
 
-  const sortChange = () => {
+  const sortPriceChange = () => {
+    let usersTemp = users;
+    const flag = sortName;
+    usersTemp.sort((a, b) => {
+      if (a.date != undefined && b.date != undefined) {
+        return (1 - flag * 2) * (new Date(a.date) - new Date(b.date));
+      } else {
+        return 1;
+      }
+    });
+    setFoodItems(usersTemp);
+    setSortName(!sortName);
+  };
+
+  const sortRatingChange = () => {
     let usersTemp = users;
     const flag = sortName;
     usersTemp.sort((a, b) => {
@@ -62,16 +103,9 @@ const Dashboard = (props) => {
   const onChangeSearchText = (event) => {
     setSearchText(event.target.value);
   };
-
-  // const onChangePreference = (event) => {
-  //   if(event.target.value == "veg"){
-  //     preference[0] = 'veg';
-  //   }
-  //   else
-  //     preference = 'non-veg';
-      
-  // };
-
+  const onChangeWallet = (event) => {
+    setAddWallet(event.target.value);
+  };
 
   const onVeg = (val) => {
     setVEG(val);
@@ -81,29 +115,31 @@ const Dashboard = (props) => {
     setNVEG(val);
   }; 
 
+  const onChangeVendors = (event) => {
+    var value = event.target.value;
+    setVendors(typeof value === "string" ? value.split(",") : value);
+  };
 
-  //  const onChangePreference = (event) => {
-  //   if(event.target.value == "veg"){
-  //     preference[0] = 'veg';
-  //   }
-  //   else
-  //     preference = 'non-veg';
-      
-  // };
-  // const addPreference = (event) => {
-  //   console.log(preference)
-  //   axios
-  //     .post("http://localhost:4000/foodItem/preference", { preference: preference })
-  //     .then((response) => {
-  //       setFoodItems(response.data);
-  //       setSelUsers(response.data);
-  //       setSortedUsers(response.data);
-  //       console.log(response.data)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
+  const onChangeTags = (event) => {
+    var value = event.target.value;
+    setTags(typeof value === "string" ? value.split(",") : value);
+  };
+
+
+  const addMoney = () => {
+    axios
+      .post("http://localhost:4000/fooditem/handleWallet", {
+        user_name: localStorage.getItem("email"),
+        amount: addWallet
+      })
+      .then((response) => {
+        setWallet(response.data.amount)
+        alert("money added yay!")
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+};
 
   const fuse = new Fuse(users, {
     keys: ["name"],
@@ -120,17 +156,40 @@ const Dashboard = (props) => {
     {
       temp = [].concat(users);
     }
-    console.log(temp)
 
-    temp = temp.filter((item) => ((WantVeg && item.preference === 'veg') || (WantNVeg && item.preference === 'non-veg')));
+    temp = temp.filter((item) => ((WantVeg && item.preference == 'veg') || (WantNVeg && item.preference == 'non-veg')));console.log(temp);
+    temp = temp.filter((item) => selVendors.length? selVendors.some((vendor) => vendor == item.vendor) : true);console.log(temp);
+    temp = temp.filter((item) => selTags.length? selTags.some((vendor) => vendor == item.tags) : true);console.log(temp);
+
     setSelUsers(temp);
-    console.log(temp)
-    console.log(WantNVeg);
-    console.log(WantVeg)
-  }, [searchText, WantVeg, WantNVeg]);
+
+  }, [searchText, WantVeg, WantNVeg, selVendors, selTags]);
 
   return (
     <div>
+       <Grid container spacing={3}>
+        <Grid item xs={6} md={6} lg={6}>
+          <List component="nav" aria-label="mailbox folders">
+            <ListItem text>
+              <h1>Wallet: {wallet} </h1>
+            </ListItem>
+          </List>
+        </Grid>
+      </Grid>
+      <Grid item xs={6} md={6} lg={6}>
+        <TextField
+          id="standard-basic"
+          label="Add Money"
+          fullWidth={true}
+          value={addWallet}
+          onChange={onChangeWallet}
+        />
+      </Grid>
+      <Grid item xs={12}>
+        <Button variant="contained" color="primary" onClick={addMoney}>
+          Add Money
+        </Button>
+      </Grid>
       <Grid container>
         <Grid item xs={12} md={3} lg={3}>
           <List component="nav" aria-label="mailbox folders">
@@ -168,36 +227,58 @@ const Dashboard = (props) => {
                   Food Preference
                 </Grid>
                 
-             
-                 <Checkbox  label="veg" checked={WantVeg} onChange={() => onVeg(!WantVeg)}/>
-                <Checkbox  label="non-veg" checked={WantNVeg} onChange={() => onNVeg(!WantNVeg)}/>
+                <FormGroup>
+                <FormControlLabel control={<Checkbox defaultChecked />}  label="non-veg" checked={WantNVeg} onChange={() => onNVeg(!WantNVeg)} />
+                <FormControlLabel control={<Checkbox defaultChecked />}  label="veg" checked={WantVeg} onChange={() => onVeg(!WantVeg)} />
+                </FormGroup>
 
               </Grid>
-              {/* <Grid item xs={12}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={addPreference}
-                >
-                  Apply
-                </Button> */}
-              {/* </Grid> */}
             </ListItem>
             <Divider />
             <ListItem divider>
-              <Autocomplete
-                id="combo-box-demo"
-                options={users}
-                getOptionLabel={(option) => option.name}
-                fullWidth
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="Select Names"
-                    variant="outlined"
-                  />
-                )}
-              />
+            <Grid item xs={12}>
+                <FormControl sx={{ m: 1, width: 150 }}>
+                  <InputLabel id="demo-multiple-name-label">Vendors</InputLabel>
+                  <Select
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    multiple
+                    value={selVendors}
+                    onChange={onChangeVendors}
+                    input={<OutlinedInput label="Name" />}
+                  >
+                    {vendorName.map((item) => (
+                      <MenuItem key={item.shop_name} value={item.shop_name}>
+                        {item.shop_name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </ListItem>
+            <Divider />
+            <ListItem divider>
+            <Grid item xs={12}>
+                <FormControl sx={{ m: 1, width: 150 }}>
+                  <InputLabel id="demo-multiple-name-label">Tags</InputLabel>
+                  <Select
+                    labelId="demo-multiple-name-label"
+                    id="demo-multiple-name"
+                    multiple
+                    value={selTags}
+                    onChange={onChangeTags}
+                    input={<OutlinedInput label="Tags" />}
+                  >
+                    {users.map((item) =>
+                      item.tags.map((tags) => (
+                        <MenuItem key={tags} value={tags}>
+                          {tags}
+                        </MenuItem>
+                      ))
+                    )}
+                  </Select>
+                </FormControl>
+              </Grid>
             </ListItem>
           </List>
         </Grid>
@@ -208,14 +289,19 @@ const Dashboard = (props) => {
                 <TableRow>
                   <TableCell> Sr No.</TableCell>
                   <TableCell>
-                    {" "}
-                    <Button onClick={sortChange}>
-                      {sortName ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
-                    </Button>
                     Name
                   </TableCell>
-                  <TableCell>Price</TableCell>
-                  <TableCell>Rating</TableCell>
+                  <TableCell>Vendor</TableCell>
+                  <TableCell>
+                    <Button onClick={sortPriceChange}>
+                      {sortName ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                    </Button>
+                    Price</TableCell>
+                  <TableCell>
+                  <Button onClick={sortRatingChange}>
+                      {sortName ? <ArrowDownwardIcon /> : <ArrowUpwardIcon />}
+                    </Button>
+                    Rating</TableCell>
                   <TableCell>Preference</TableCell>
                   <TableCell>Addons</TableCell>
                   <TableCell>Tags</TableCell>
@@ -226,6 +312,7 @@ const Dashboard = (props) => {
                   <TableRow key={ind}>
                     <TableCell>{ind + 1}</TableCell>
                     <TableCell>{user.name}</TableCell>
+                    <TableCell>{user.vendor}</TableCell>
                     <TableCell>{user.price}</TableCell>
                     <TableCell>{user.rating}</TableCell>
                     <TableCell>{user.preference}</TableCell>

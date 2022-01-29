@@ -12,7 +12,11 @@ var buyer = require("./routes/buyer");
 var login = require("./routes/login");
 var foodItem = require("./routes/foodItem");
 
-app.use(cors());
+app.use(
+    cors({
+      origin: "*",
+    })
+  );
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
