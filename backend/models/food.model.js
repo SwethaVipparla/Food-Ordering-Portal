@@ -27,6 +27,11 @@ const FoodItemSchema = new Schema({
         required: false,
 		default: []
     },
+	addon_price: {
+		type: Array,
+		required: false,
+		default: {}
+	},
 	tags: {	
 		type: Array,
 		required: false,

@@ -33,7 +33,7 @@ router.post("/register", (req, res) => {
         closing_time: req.body.closing_time,
         type: req.body.type
     });
-
+    console.log(newUser);
     newUser.save()
         .then(user => {
             res.status(200).json(user);

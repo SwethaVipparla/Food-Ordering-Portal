@@ -18,15 +18,21 @@ router.get("/", function(req, res) {
 	})
 });
 
-router.get("/getBuyer", async (req, res) => {
-    buyer = Buyer.findOne({ email: req.body.email });
-    if (!buyer) {
-        return res.status(404).json({
-            error: "buyer not Found",
-        });
-    } else {
-        res.json(buyer);
-    }
+router.get("/getBuyer", (req, res) => {
+    console.log(req.query);
+
+    Buyer.findOne({ email: req.query.email }).then((user) => {
+        let buyer = user; 
+        if (!buyer) {
+
+            return res.status(401).json({
+                error: "buyer not Found",
+            });
+        } else {
+            res.json(buyer);
+        }
+    });
+
 });
 
 // NOTE: Below functions are just sample to show you API endpoints working, for the assignment you may need to edit them
@@ -62,14 +68,15 @@ router.post("/register", (req, res) => {
         batch: req.body.batch,
         type: req.body.type
     });
-
+    console.log(newBuyer);
     newBuyer.save()
         .then(user => {
             res.status(200).json(user);
         })
         .catch(err => {
+            console.log(err);
             res.status(400).send(err);
-        });
+        }); 
 });
 
 router.put("/editBuyer", (req, res) => {

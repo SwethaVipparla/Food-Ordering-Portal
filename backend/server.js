@@ -4,13 +4,14 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const mongoose = require('mongoose');
 const PORT = 4000;
-const DB_NAME = "newa"
+const DB_NAME = "myapp" 
 
 // routes
 var vendor = require("./routes/vendor");
 var buyer = require("./routes/buyer");
 var login = require("./routes/login");
 var foodItem = require("./routes/foodItem");
+var order = require("./routes/order");
 
 app.use(
     cors({
@@ -32,6 +33,7 @@ app.use("/vendor", vendor);
 app.use("/buyer", buyer);
 app.use("/login", login);
 app.use("/foodItem", foodItem);
+app.use("/order", order);
 
 app.listen(PORT, function() {
     console.log("Server is running on Port: " + PORT);

@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import "./App.css";
 
-import UsersList from "./components/users/UsersList";
+import BuyerDashboard from "./components/users/BuyerDashboard";
 import Home from "./components/common/Home";
 import Register from "./components/common/Register";
 import Navbar from "./components/templates/Navbar";
 import Profile from "./components/users/Profile";
+import MyOrders from "./components/users/MyOrders";
 import Login from "./components/common/Login";
 
 const isLoggedIn = window.localStorage.getItem("email") ? true : false;
@@ -27,11 +28,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/" element={<Home />} />
-          <Route path="users" element={<UsersList />} />
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
-          <Route path="dashboard" element={<Profile />} />
+          <Route path="buyerdashboard" element={<BuyerDashboard />} />
           <Route path="login" element={<Login />} />
+          <Route path="myorders" element={<MyOrders />} />
         </Route>
       </Routes>
     </BrowserRouter>

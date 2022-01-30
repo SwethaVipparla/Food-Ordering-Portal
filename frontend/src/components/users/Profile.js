@@ -74,7 +74,7 @@ const BuyerProfile = (props) => {
   
   useEffect(() => {
     const email = localStorage.getItem("email")
-    axios.get('http://localhost:4000/buyer/getBuyer', {email : email})
+    axios.get('http://localhost:4000/buyer/getBuyer', {params: {email : email}})
             .then(res => {
                     setName(res.data.name)
                     setEmail(res.data.email)
