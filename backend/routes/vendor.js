@@ -64,16 +64,18 @@ router.put("/editVendor", (req, res) => {
     });
 });
 
-router.post("/getVendor", async (req, res) => {
+router.post("/getVendor", (req, res) => {
     const email = req.body.email
+    console.log("yo")
     console.log(email)
     Vendor.findOne({ email }).then(vendor => {
         if (!vendor) {
             return res.status(404).json({
-                error: "vendor not Found",
+                error: "vendor not found",
             });
         } else {
             res.status(200).json(vendor);
+            console.log(vendor)
         }
 
     })

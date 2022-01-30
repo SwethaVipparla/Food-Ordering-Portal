@@ -31,6 +31,20 @@ router.post("/getWallet", (req,res) => {
 	});
 });
 
+router.post("/vendorDetails", (req,res) => {
+    const vendor = req.body.shop_name
+    FoodItem.find({ vendor }).then(users => {
+		// Check if users email exists
+		if (!users) {
+			res.status(400).send("Email not found");
+		}
+        else {
+            res.status(200).json(users);
+        }
+	});
+});
+
+
 
 // NOTE: Below functions are just sample to show you API endpoints working, for the assignment you may need to edit them
 
@@ -140,24 +154,20 @@ router.post("/handleBuyWallet", (req,res) => {
             res.status(400).send(err);
             return;
         } else {
-            console.log(wallet.amount);
-            console.log(req.body.total);    
-            let final = parseInt(parseInt(wallet.amount) - parseInt(req.body.total));
+            const amt = parseInt(wallet.amount);
+            let final = parseInt(amt - parseInt(req.body.total));
             if(final < 0){
                 res.status(400).send("Insufficient Balance");
-                return;
             }
 
             Wallet.updateMany({email: email},{$set: {email: email, amount: parseInt(final)}}).then(item => {
-                // Check if users email exists
                 if (!item) {
-                        res.status(400).send("Email not found");
-                        return;
+                    return res.status(404).json({
+                        error: "Not found",
+                    });
                 }
-                else{
-                        res.status(200).json({email: email, amount: parseInt(final)});
-                        console.log(item)
-                        return;
+                else {
+                    res.status(200).json({email: email, amount: parseInt(final)});
                 }
             }); 
         }
@@ -177,6 +187,42 @@ router.post("/orders", function(req, res) {
     });
 
 });
+
+router.post("/delete", function(req, res) {
+    FoodItem.deleteOne({ name: req.body.name }, function(err, fooditem) {
+        if (err) {
+            console.log(err);
+        } 
+        else {
+            console.log(req.body.name);
+            res.status(200).json(fooditem);
+        }
+    })
+});
+
+router.put("/editItem", (req, res) => {
+    FoodItem.findOneAndUpdate({ name: req.body.name }, {
+        name: req.body.name,
+        price: req.body.price,
+        preference: req.body.preference,
+        addon: req.body.addon,
+        addon_price: req.body.addon_price,
+        vendor: req.body.vendor,
+        tags: req.body.tags,
+    }, { new: true, useFindAndModify: false }, function (err, val) {
+        console.log(err)
+        if (err) {
+            return res.status(404).json({
+                error: "Not found",
+            });
+        }
+        else {
+            return res.status(200).json(val)
+        }
+    });
+});
+
+
 
 // POST request 
 module.exports = router;

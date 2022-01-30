@@ -8,6 +8,7 @@ import Navbar from "./components/templates/Navbar";
 import Profile from "./components/users/Profile";
 import MyOrders from "./components/users/MyOrders";
 import Login from "./components/common/Login";
+import VendorDashboard from "./components/users/VendorDashboard";
 
 const isLoggedIn = window.localStorage.getItem("email") ? true : false;
 
@@ -31,6 +32,7 @@ function App() {
           <Route path="register" element={<Register />} />
           <Route path="profile" element={<Profile />} />
           <Route path="buyerdashboard" element={<BuyerDashboard />} />
+          <Route path="vendordashboard" element={<VendorDashboard />} />
           <Route path="login" element={<Login />} />
           <Route path="myorders" element={<MyOrders />} />
         </Route>
